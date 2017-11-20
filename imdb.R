@@ -1,6 +1,7 @@
 library(tidyverse)
 library(dplyr)
 library(plotly)
+library(tidyjson)
 
 movies <- read_csv('./data/data_raw/tmdb-5000-movie-dataset/tmdb_5000_movies.csv')
 colnames(movies)[colnames(movies) == 'vote_average'] <- 'rating'
@@ -25,10 +26,9 @@ tidy_movies <- movies %>% filter(runtime <= 240 & runtime > 0)
 ggplot(tidy_movies, aes(runtime, rating)) +
   geom_point(colour = 'blue')
 
-#zero rating
+# 0/10 points rating
 tidy_movies %>% ggplot(aes(rating, vote_count)) +
   geom_bar(stat = "identity")
-
 
 tidy_movies <- tidy_movies %>% 
   filter(rating > 2.5 & rating < 9)
@@ -36,23 +36,20 @@ tidy_movies <- tidy_movies %>%
 # rating, runtime over time
 ggplot(tidy_movies, aes(x = release_date, y = rating)) +
   geom_point(aes(colour = runtime)) +
-  scale_color_gradient(low = 'yellow', high = 'red')
+  scale_color_gradient(low = 'yellow', high = 'red') +
+  xlab('release date')
+  ggtitle("runtime vs rating over years")
 
 # To do 
 plot <- ggplot(tidy_movies, aes(x = release_date, y = runtime)) +
   geom_point(aes(colour = rating)) +
-  scale_color_gradient(low = 'yellow', high = 'red') +
-  xlab('release date') +
-  ylab('length') + 
-  ggtitle("runtime vs rating over years")
+  scale_color_gradient(low = 'yellow', high = 'red')
 
 ggplotly(plot)
 
 # genre
 head(movies$genres)
 
-# devtools::install_github("sailthru/tidyjson")
-library('tidyjson')
 # convert and gether json
 movies_by_genre <- movies %>% 
   as.tbl_json(json.column = "genres") %>% 
@@ -81,3 +78,8 @@ ggplot(movies_by_genre_sub, aes(release_date, budget)) +
   geom_point(aes(color = genre)) +
   geom_smooth() +
   facet_grid(genre~.)
+
+# To do: plot the relation of popularity and rating
+# To do: plot the title of the most popular movie
+# To do: plot the relation of popularity and rating of action and drama movies
+#        and show in facet
