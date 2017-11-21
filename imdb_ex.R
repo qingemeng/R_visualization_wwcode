@@ -4,6 +4,7 @@ library(plotly)
 library(tidyjson)
 
 movies <- read_csv('./data/data_raw/tmdb-5000-movie-dataset/tmdb_5000_movies.csv')
+colnames(movies)
 colnames(movies)[colnames(movies) == 'vote_average'] <- 'rating'
 colnames(movies)
 
@@ -11,46 +12,47 @@ colnames(movies)
 movies <- movies %>%  
   filter(!is.na(release_date))
 
-colnames(movies)
+head(movies, 1)
+dim(movies)
 
-#head(movies, 1)
-#dim(movies)
+#TODO: rating, runtime
 
-#TODO: rating, length
 
 # remove very long movies
 tidy_movies <- movies %>% filter(runtime <= 240 & runtime > 0) 
 ggplot(tidy_movies, aes(runtime, rating)) +
   geom_point(colour = 'blue')
 
-# 0/10 points rating
+#0/10 points rating
 tidy_movies %>% ggplot(aes(rating, vote_count)) +
   geom_bar(stat = "identity")
 
-tidy_movies <- tidy_movies %>% 
-  filter(rating > 2.5 & rating < 9)
+#TODO: filter out movies with rating =< 2.5 & >=9
 
-# rating, runtime scale over time
+
+# rating, release date color scale over runtime
 ggplot(tidy_movies, aes(x = release_date, y = rating)) +
   geom_point(aes(colour = runtime)) +
   scale_color_gradient(low = 'yellow', high = 'red') +
-  xlab('release date')
-ggtitle("runtime vs rating over years")
+  xlab('release date') +
+  ggtitle("rating, release date scale over runtime")
 
-# TODO: release date vs runtime scale over rating
+# TODO: y: runtime vs x: release date, color scale over rating
 
 # ggplotly(plot)
 
 # genre
-head(movies$genres)
+head(tidy_movies$genres,1)
 
-# convert and gether json
+# convert and gather json
 movies_by_genre <- tidy_movies %>% 
   as.tbl_json(json.column = "genres") %>% 
   gather_array() %>% 
   spread_values(genre=jstring('name'))
+head(movies_by_genre$genre,3)
 
 # TODO boxplot for rating vs genre
+
 
 # get frequecy by gener
 genre_frequencies <- movies_by_genre %>%

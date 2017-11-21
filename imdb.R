@@ -33,14 +33,14 @@ tidy_movies %>% ggplot(aes(rating, vote_count)) +
 tidy_movies <- tidy_movies %>% 
   filter(rating > 2.5 & rating < 9)
 
-# rating, runtime over time
+# rating, release date color scale over runtime
 ggplot(tidy_movies, aes(x = release_date, y = rating)) +
   geom_point(aes(colour = runtime)) +
   scale_color_gradient(low = 'yellow', high = 'red') +
-  xlab('release date')
+  xlab('release date') +
   ggtitle("runtime vs rating over years")
 
-# To do 
+# TODO: y: runtime vs x: release date, color scale over rating
 plot <- ggplot(tidy_movies, aes(x = release_date, y = runtime)) +
   geom_point(aes(colour = rating)) +
   scale_color_gradient(low = 'yellow', high = 'red')
@@ -76,11 +76,11 @@ g_action_movies_plot +
   geom_point() +
   geom_smooth(method = 'auto')
 movies_by_genre_sub <- filter(movies_by_genre, genre == 'Action' | genre == 'Science Fiction' | genre == 'Animation')
-ggplot(movies_by_genre_sub, aes(release_date, budget)) +
+p <- ggplot(movies_by_genre_sub, aes(release_date, budget)) +
   geom_point(aes(color = genre)) +
   geom_smooth() +
   facet_grid(genre~.)
-
+ggplotly(p)
 # To do: plot the relation of popularity and rating
 # To do: plot the title of the most popular movie
 # To do: plot the relation of popularity and rating of action and drama movies
