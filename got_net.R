@@ -1,12 +1,12 @@
-library("tidyverse")
-library("visNetwork")
+library(tidyverse)
+library(visNetwork)
 
-got_nodes <- read_csv("data/data_raw/GoT/GoT_nodes.csv")
-got_edges <- read_csv("data/data_raw/GoT/GoT_edges.csv")
+got_nodes <- read_csv('data/data_raw/GoT/GoT_nodes.csv')
+got_edges <- read_csv('data/data_raw/GoT/GoT_edges.csv')
 
 # process edges and nodes
 got_edges <- got_edges %>% rename(from = source, to = target)
-got_nodes <- got_nodes %>% add_column(image = '', shape = "image")
+got_nodes <- got_nodes %>% add_column(image = '', shape = 'image')
 
 # add icons
 got_nodes[got_nodes$name == 'Jon Snow', ]$image <- 
@@ -16,7 +16,7 @@ got_nodes[got_nodes$name == 'Daenerys Targaryen', ]$image <-
 
 visNetwork(got_nodes,
            got_edges,
-           width = "100%") %>%
+           width = '100%') %>%
   visNodes(shapeProperties = list(useBorderWithImage = TRUE)) %>%
   visIgraphLayout() %>%
   visOptions(highlightNearest = TRUE)
