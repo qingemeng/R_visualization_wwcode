@@ -16,10 +16,7 @@ colnames(movies)
 #head(movies, 1)
 #dim(movies)
 
-# rating, length
-runtime_rating_plot <- ggplot(data = movies, aes(x = runtime, y = rating))
-runtime_rating_plot +
-  geom_point()
+#TODO: rating, length
 
 # remove very long movies
 tidy_movies <- movies %>% filter(runtime <= 240 & runtime > 0) 
@@ -33,19 +30,16 @@ tidy_movies %>% ggplot(aes(rating, vote_count)) +
 tidy_movies <- tidy_movies %>% 
   filter(rating > 2.5 & rating < 9)
 
-# rating, runtime over time
+# rating, runtime scale over time
 ggplot(tidy_movies, aes(x = release_date, y = rating)) +
   geom_point(aes(colour = runtime)) +
   scale_color_gradient(low = 'yellow', high = 'red') +
   xlab('release date')
-  ggtitle("runtime vs rating over years")
+ggtitle("runtime vs rating over years")
 
-# To do 
-plot <- ggplot(tidy_movies, aes(x = release_date, y = runtime)) +
-  geom_point(aes(colour = rating)) +
-  scale_color_gradient(low = 'yellow', high = 'red')
+# TODO: release date vs runtime scale over rating
 
-ggplotly(plot)
+# ggplotly(plot)
 
 # genre
 head(movies$genres)
@@ -57,8 +51,6 @@ movies_by_genre <- tidy_movies %>%
   spread_values(genre=jstring('name'))
 
 # TODO boxplot for rating vs genre
-g_genre <- ggplot(movies_by_genre, aes(genre, rating))
-g_genre + geom_boxplot(aes(fill = genre))
 
 # get frequecy by gener
 genre_frequencies <- movies_by_genre %>%
