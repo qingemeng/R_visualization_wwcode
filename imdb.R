@@ -59,6 +59,8 @@ movies_by_genre <- tidy_movies %>%
 # TODO boxplot for rating vs genre
 g_genre <- ggplot(movies_by_genre, aes(genre, rating))
 g_genre + geom_boxplot(aes(fill = genre))
+plot_ly(movies_by_genre, x = ~genre, y = ~rating, 
+        color = ~genre, type = 'box', boxpoints = FALSE)
 
 # get frequecy by gener
 genre_frequencies <- movies_by_genre %>%
@@ -82,6 +84,18 @@ p <- ggplot(movies_by_genre_sub, aes(release_date, budget)) +
   facet_grid(genre~.)
 ggplotly(p)
 # To do: plot the relation of popularity and rating
+p <- ggplot(tidy_movies, aes(rating, popularity)) +
+  geom_point()
+
 # To do: plot the title of the most popular movie
+plot_ly(tidy_movies, x = ~rating, y = ~popularity, text = ~title)
+
 # To do: plot the relation of popularity and rating of action and drama movies
 #        and show in facet
+sub_action_drama <- movies_by_genre %>% 
+  filter(genre == 'Action' | genre == 'Drama')
+  
+ggplot(sub_action_drama, aes(x = rating, y = popularity)) + 
+  geom_point(aes(color = genre)) +
+  facet_grid(genre~.)
+plot_ly(data = sub_action_drama, x = ~rating, y = ~popularity, color = ~genre, text = ~title)
